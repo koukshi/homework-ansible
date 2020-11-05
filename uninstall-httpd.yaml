@@ -1,0 +1,32 @@
+- hosts: part1
+  gather_facts: true
+  become: yes
+
+  tasks:
+    - name: Remove the Apache package
+      yum:
+        name: httpd
+        state: absent
+
+    - name: Remove file /var/www/html/index.html
+      file:
+        path: /var/www/html/index.html
+        state: absent
+
+
+    - name: permit traffic in default zone for https service
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: disabled
+
+    - name: disable firewalld(old module)
+      firewalld:
+        service: https
+        permanent: yes
+        state: disabled
+
+    - name: workaround for firewalld module
+      command: firewall-cmd --remove-service=http
+        
+

@@ -1,0 +1,45 @@
+- hosts: part1
+  gather_facts: true
+  become: yes
+
+  tasks:
+    - name: add proxy for yum
+      lineinfile:
+        path: /etc/yum.conf
+        line: proxy=http://10.10.0.2:3128
+
+    - name: install httpd
+      yum:
+        name: httpd
+        state: latest
+
+    - name: start and enable httpd
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: create '/var/www/html/index.html' file and Add a line to a file if the file does no                                                                                                      t exist
+      lineinfile:
+        path: /var/www/html/index.html
+        line: Welcome to my web server
+        create: yes
+
+    - name: permit traffic in default zone for https service
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+
+    - name: workaround for firewalld module
+      command: firewall-cmd --add-service=http
+        
+    - name: Modify Grub Replace between the expressions
+      lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX(.+)"$'
+        line: 'GRUB_CMDLINE_LINUX\1 net.ifnames=0 biosdevname=0"'
+        backrefs: yes
+    
+    - name: apply grub changes
+      command: grub2-mkconfig -o /boot/grub2/grub.cfg
