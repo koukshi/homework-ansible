@@ -30,9 +30,10 @@
         service: http
         permanent: yes
         state: enabled
+        immediate: yes
 
-    - name: workaround for firewalld module
-      command: firewall-cmd --add-service=http
+#    - name: workaround for firewalld module
+#      command: firewall-cmd --add-service=http
         
     - name: Modify Grub Replace between the expressions
       lineinfile:
