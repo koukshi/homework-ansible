@@ -35,12 +35,19 @@
 #    - name: workaround for firewalld module
 #      command: firewall-cmd --add-service=http
         
-    - name: Modify Grub Replace between the expressions
+    - name: configure grub
       lineinfile:
-        path: /etc/default/grub
-        regexp: '^GRUB_CMDLINE_LINUX(.+)"$'
-        line: 'GRUB_CMDLINE_LINUX\1 net.ifnames=0 biosdevname=0"'
+        dest: "/etc/default/grub"
+        regexp: '^GRUB_CMDLINE_LINUX="((:?(?!{{ item.option }}=).)*?)"$'
+        line: 'GRUB_CMDLINE_LINUX="\1 {{ item.option }}={{ item.value }}"'
         backrefs: yes
-    
-    - name: apply grub changes
-      command: grub2-mkconfig -o /boot/grub2/grub.cfg
+      loop:
+        - { option: "net.ifnames", value: "0" }
+        - { option: "biosdevname", value: "0" }
+      loop_control:
+        label: "{{ item.option }}"
+      notify: update grub config
+
+  handlers:
+    - name: update grub config
+      shell: grub2-mkconfig -o /boot/grub2/grub.cfg
