@@ -1,0 +1,13 @@
+---
+# handlers file for lab3-role
+    - name: reload_httpd
+      service:
+        name: httpd
+        state: reloaded
+
+    - name: vsftpd restart
+      service:
+        name: vsftpd
+        state: restarted
+    - name: verify context
+      shell: ls -la -Z /var/ftp/pub

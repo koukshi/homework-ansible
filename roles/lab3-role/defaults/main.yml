@@ -1,0 +1,4 @@
+---
+# defaults file for lab3-role
+ianonymous_enable: "YES"
+anon_upload_enable: "YES"

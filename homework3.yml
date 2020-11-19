@@ -1,0 +1,5 @@
+- hosts: lab3
+  roles:  
+    - role: lab3-role
+ # vars_files:
+ #   - ./lab3.vars.yml

@@ -1,0 +1,21 @@
+---
+# tasks file for lab3-role
+  - name: print vars
+    debug:
+      var: "{{ item }}"
+    with_items:
+      - httpd
+      - firewalld
+      - vsftpd
+
+  - name: install httpd on host
+    import_tasks: httpd_install.yaml
+    when: httpd is not defined
+ 
+  - name: configure firewalld on host
+    import_tasks: ./firewalld_install.yaml
+    when: firewalld is not defined
+
+  - name: install vsftpd
+    import_tasks: vsftpd.yml
+    when: vsftpd == true

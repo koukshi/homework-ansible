@@ -1,0 +1,11 @@
+    - name: firewalld stared
+      service:
+        name: firewalld
+        state: started
+
+    - name: permit traffic in default zone for https service
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes

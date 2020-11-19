@@ -1,0 +1,35 @@
+---
+  - name: check proxy config
+    shell: grep proxy /etc/yum.conf
+    register: proxy_status
+    ignore_errors: true
+
+  - name: print proxy_status
+    debug:
+      msg: "{{ proxy_status }}"
+
+  - name: add proxy for yum
+    lineinfile:
+      path: /etc/yum.conf
+      line: proxy=http://10.10.0.2:3128
+    when: proxy_status.stdout == ""
+
+  - name: install httpd
+    yum:
+      name: httpd
+      state: latest
+
+  - name: start and enable httpd
+    service:
+      name: httpd
+      state: started
+      enabled: true
+
+  - name: create '/var/www/html/index.html' file and Add a line to a file if the file does not exist
+    lineinfile:
+      path: /var/www/html/index.html
+      line: "Welcome to my web server {{ ansible_facts }}"
+      create: yes
+    notify:
+      - reload_httpd
+
