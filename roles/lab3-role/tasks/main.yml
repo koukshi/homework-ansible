@@ -10,11 +10,11 @@
 
   - name: install httpd on host
     import_tasks: httpd_install.yaml
-    when: httpd is not defined
+    when: httpd is defined
  
   - name: configure firewalld on host
     import_tasks: ./firewalld_install.yaml
-    when: firewalld is not defined
+    when: firewalld is defined
 
   - name: install vsftpd
     import_tasks: vsftpd.yml
