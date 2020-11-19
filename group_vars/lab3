@@ -1,0 +1,3 @@
+httpd: 111
+firewalld: 222off
+vsftpd: yes
