@@ -1,4 +1,4 @@
-- hosts: lab3
+- hosts: all
   roles:  
     - role: lab3-role
  # vars_files:
